@@ -15,8 +15,6 @@ import numpy as np
 # Matplotlib is used for creating graphs and visualizations
 import matplotlib.pyplot as plt
 
-# Seaborn is used for better-looking statistical visualizations
-import seaborn as sns
 
 # StandardScaler is used to scale numerical features
 from sklearn.preprocessing import StandardScaler
@@ -24,12 +22,12 @@ from sklearn.preprocessing import StandardScaler
 # KMeans is the K-Means clustering algorithm
 from sklearn.cluster import KMeans
 
-# Silhouette Score is used to evaluate the quality of clusters
-from sklearn.metrics import silhouette_score
+# # Silhouette Score is used to evaluate the quality of clusters
+# from sklearn.metrics import silhouette_score
 
-# PCA is used later to reduce multiple dimensions to 2 dimensions
-# so that we can visualize the clusters
-from sklearn.decomposition import PCA
+# # PCA is used later to reduce multiple dimensions to 2 dimensions
+# # so that we can visualize the clusters
+# from sklearn.decomposition import PCA
 
 
 # ============================================================
@@ -155,21 +153,23 @@ df.drop_duplicates(inplace=True)
 
 
 # ============================================================
-# 8. EXPLORATORY DATA ANALYSIS (EDA)
+# EXPLORATORY DATA ANALYSIS USING ONLY MATPLOTLIB
 # ============================================================
 
-# Before applying K-Means, we should understand the data visually.
-
-
 # ------------------------------------------------------------
-# 8.1 Gender Distribution
+# 1. Gender Distribution
 # ------------------------------------------------------------
 
-# countplot counts how many customers belong to each gender.
+# Count how many customers are in each gender category
+gender_counts = df["Gender"].value_counts()
 
 plt.figure(figsize=(6, 4))
 
-sns.countplot(data=df, x="Gender")
+# Create a bar chart
+plt.bar(
+    gender_counts.index,
+    gender_counts.values
+)
 
 plt.title("Customer Distribution by Gender")
 plt.xlabel("Gender")
@@ -179,16 +179,15 @@ plt.show()
 
 
 # ------------------------------------------------------------
-# 8.2 Age Distribution
+# 2. Age Distribution
 # ------------------------------------------------------------
 
 plt.figure(figsize=(8, 5))
 
-sns.histplot(
-    data=df,
-    x="Age",
-    bins=20,
-    kde=True
+# Create histogram for customer age
+plt.hist(
+    df["Age"],
+    bins=20
 )
 
 plt.title("Age Distribution")
@@ -199,16 +198,15 @@ plt.show()
 
 
 # ------------------------------------------------------------
-# 8.3 Annual Income Distribution
+# 3. Annual Income Distribution
 # ------------------------------------------------------------
 
 plt.figure(figsize=(8, 5))
 
-sns.histplot(
-    data=df,
-    x="Annual Income (k$)",
-    bins=20,
-    kde=True
+# Create histogram for annual income
+plt.hist(
+    df["Annual Income (k$)"],
+    bins=20
 )
 
 plt.title("Annual Income Distribution")
@@ -219,34 +217,31 @@ plt.show()
 
 
 # ------------------------------------------------------------
-# 8.4 Spending Score Distribution
+# 4. Spending Score Distribution
 # ------------------------------------------------------------
 
 plt.figure(figsize=(8, 5))
 
-sns.histplot(
-    data=df,
-    x="Spending Score (1-100)",
-    bins=20,
-    kde=True
+# Create histogram for spending score
+plt.hist(
+    df["Spending Score (1-100)"],
+    bins=20
 )
 
 plt.title("Spending Score Distribution")
-plt.xlabel("Spending Score")
+plt.xlabel("Spending Score (1-100)")
 plt.ylabel("Number of Customers")
 
 plt.show()
 
 
-# ============================================================
-# 9. UNDERSTAND RELATIONSHIP BETWEEN FEATURES
-# ============================================================
-
-# A scatter plot helps us visually check whether customers
-# naturally form groups.
+# ------------------------------------------------------------
+# 5. Annual Income vs Spending Score
+# ------------------------------------------------------------
 
 plt.figure(figsize=(8, 6))
 
+# Scatter plot
 plt.scatter(
     df["Annual Income (k$)"],
     df["Spending Score (1-100)"]
@@ -257,7 +252,6 @@ plt.xlabel("Annual Income (k$)")
 plt.ylabel("Spending Score (1-100)")
 
 plt.show()
-
 
 # ============================================================
 # 10. SELECT FEATURES FOR K-MEANS
@@ -420,13 +414,13 @@ plt.show()
 # Don't blindly use 5.
 # Look at your Elbow graph and also check the Silhouette Score.
 
-optimal_k = 5
+chosen_k = 5
 
 
 # Create the final K-Means model.
 
 kmeans = KMeans(
-    n_clusters=optimal_k,
+    n_clusters=chosen_k,
     random_state=42,
     n_init=10
 )
